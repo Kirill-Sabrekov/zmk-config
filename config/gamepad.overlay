@@ -1,41 +1,56 @@
 #include <zephyr/dt-bindings/input/input-event-codes.h>
-/* Reference: https://docs.zephyrproject.org/apidoc/latest/group__input__events.html */
-
-&adc {
-	status = "okay";
-};
 
 / {
-	anin0: analog_input_0 {
-		compatible = "zmk,analog-input";
-		sampling-hz = <100>;
-		x-ch {
-			io-channels = <&adc 2>; // <--- see ain-map.png for nRF52840
-			mv-mid = <1630>;
-			mv-min-max = <1600>;
-			mv-deadzone = <10>;
-			scale-multiplier = <1>;
-			scale-divisor = <70>;
-			invert;
-			evt-type = <INPUT_EV_REL>;
-			input-code = <INPUT_REL_X>;
-		};
-		y-ch {
-			io-channels = <&adc 3>; // <--- see ain-map.png for nRF52840
-			mv-mid = <1630>;
-			mv-min-max = <1600>;
-			mv-deadzone = <10>;
-			scale-multiplier = <3>;
-			scale-divisor = <4>;
-			invert;
-			evt-type = <INPUT_EV_REL>;
-			input-code = <INPUT_REL_Y>;
+    // Матрица 4x2 для 8 кнопок
+    kscan {
+        compatible = "zmk,kscan";
+        rows = <4>;
+        cols = <2>;
+        row-gpios = <&gpio0 6  (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,  // P0.06 (D1)
+                   <&gpio0 24 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,  // P0.24 (D5)
+                   <&gpio0 1  (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,  // P1.06 (D9)
+                   <&gpio0 2  (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;  // P0.02 (D19)
+        col-gpios = <&gpio0 29 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,  // P0.29 (D21)
+                    <&gpio0 31 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;  // P0.31 (D22)
+    };
 
-			/* enable report mdoe for gamepad axix or knob */
-			/* to only call input_report on quantquantized value is updated */
-			/* NOTE: mouse input does NOT need this */
-			report-on-change-only;
+    // Энкодер 1
+    encoders {
+        compatible = "zmk,encoders";
+        sensors = <&enc1 &enc2>;
+    };
 
-		};
-	};
+    enc1: encoder_0 {
+        compatible = "alps,ec11";
+        label = "ENCODER1";
+        a-gpios = <&gpio0 17 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;  // P0.17 (D2)
+        b-gpios = <&gpio0 20 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;  // P0.20 (D3)
+        resolution = <4>;
+    };
+
+    enc2: encoder_1 {
+        compatible = "alps,ec11";
+        label = "ENCODER2";
+        a-gpios = <&gpio0 0  (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;  // P1.00 (D6)
+        b-gpios = <&gpio0 11 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;  // P0.11 (D7)
+        resolution = <4>;
+    };
+
+    // Кнопка энкодера 1
+    sw_enc1: gpio_key_enc1 {
+        compatible = "gpio-keys";
+        keys = <&enc1_sw>;
+    };
+    enc1_sw: enc1_sw_pin {
+        gpios = <&gpio0 22 GPIO_ACTIVE_LOW>;  // P0.22 (D4)
+    };
+
+    // Кнопка энкодера 2
+    sw_enc2: gpio_key_enc2 {
+        compatible = "gpio-keys";
+        keys = <&enc2_sw>;
+    };
+    enc2_sw: enc2_sw_pin {
+        gpios = <&gpio0 4  GPIO_ACTIVE_LOW>;  // P1.04 (D8)
+    };
 };
