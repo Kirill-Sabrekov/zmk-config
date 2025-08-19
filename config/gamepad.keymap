@@ -1,0 +1,21 @@
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+
+/ {
+    keymap {
+        compatible = "zmk,keymap";
+
+        default_layer {
+            // Энкодер: Ротация как volume (или custom для gamepad)
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
+
+            // Кнопка энкодера: Gamepad button 1
+            bindings = <&gp GAMEPAD_BUTTON_1>;
+
+            // Кнопка джойстика: Gamepad button 2
+            bindings = <&gp GAMEPAD_BUTTON_2>;
+
+            // Джойстик оси уже в HID, не нужно bind
+        };
+    };
+};
