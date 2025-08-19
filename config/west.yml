@@ -13,7 +13,7 @@ manifest:
       remote: zmkfirmware
       import: app/west.yml
     - name: zmk-analog-input-driver
-      remote: badjef
+      remote: badjeff
       revision: main
   self:
     path: config
