@@ -7,17 +7,17 @@
 
         default_layer {
             bindings = <
-                &kp GAMEPAD_BUTTON_1  &kp GAMEPAD_BUTTON_2  // Ряды 1, столбцы 1-2
-                &kp GAMEPAD_BUTTON_3  &kp GAMEPAD_BUTTON_4  // Ряд 2
-                &kp GAMEPAD_BUTTON_5  &kp GAMEPAD_BUTTON_6  // Ряд 3
-                &kp GAMEPAD_BUTTON_7  &kp GAMEPAD_BUTTON_8  // Ряд 4
+                &gp GAMEPAD_BUTTON_1  &gp GAMEPAD_BUTTON_2  // Ряды 1, столбцы 1-2
+                &gp GAMEPAD_BUTTON_3  &gp GAMEPAD_BUTTON_4  // Ряд 2
+                &gp GAMEPAD_BUTTON_5  &gp GAMEPAD_BUTTON_6  // Ряд 3
+                &gp GAMEPAD_BUTTON_7  &gp GAMEPAD_BUTTON_8  // Ряд 4
             >;
 
             // Кнопки энкодеров
             bindings = <&gp GAMEPAD_BUTTON_9>;  // Кнопка энкодера 1 (P0.22)
             bindings = <&gp GAMEPAD_BUTTON_10>; // Кнопка энкодера 2 (P1.04)
 
-            // Энкодеры: Кастомные действия (не volume)
+            // Энкодеры: Кастомные действия (не volume, например, DPAD)
             &enc1 {
                 sensor-bindings = <&inc_dec_gp GAMEPAD_DPAD_LEFT GAMEPAD_DPAD_RIGHT>;
             };
