@@ -1,6 +1,27 @@
-name: Build ZMK firmware
-on: [push, pull_request, workflow_dispatch]
+name: Build ZMK Firmware
+
+on: [push, pull_request]
 
 jobs:
   build:
-    uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@v0.3
+    runs-on: ubuntu-latest
+    container:
+      image: zmkfirmware/zmk-build-arm:stable
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Initialize West
+        run: |
+          west init -l config
+          west update
+      - name: Export Zephyr
+        run: west zephyr-export
+      - name: Build Firmware
+        run: west build -b nice_nano_v2 -- -DSHIELD=gamepad
+    strategy:
+      matrix:
+        include:
+          - shield: gamepad
+            board: nice_nano_v2
